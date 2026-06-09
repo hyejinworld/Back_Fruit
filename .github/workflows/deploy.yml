@@ -54,6 +54,47 @@ jobs:
             MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
             DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             EOF
+            
+            cat > docker-compose-prod.yml << 'COMPOSEOF'
+            services:
+              springboot-app:
+                image: ${{ secrets.DOCKER_USERNAME }}/fruit-app:latest
+                container_name: fruit_app
+                restart: on-failure
+                ports:
+                  - "9000:9000"
+                environment:
+                  SPRING_JWT_SECRET: ${{ secrets.SPRING_JWT_SECRET }}
+                  MYSQL_URL: jdbc:mysql://mysql-db:3306/jpa?serverTimezone=Asia/Seoul
+                  MYSQL_USER: ${{ secrets.MYSQL_USER }}
+                  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+                  JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+                  SPRING_PROFILES_ACTIVE: prod
+                depends_on:
+                  - mysql-db
+                networks:
+                  - mynet
+              mysql-db:
+                image: mysql:8.0
+                container_name: fruit_mysql
+                restart: on-failure
+                ports:
+                  - "3306:3306"
+                command: --innodb-buffer-pool-size=128M
+                environment:
+                  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+                  MYSQL_DATABASE: jpa
+                  MYSQL_ROOT_HOST: '%'
+                volumes:
+                  - mysql_data:/var/lib/mysql
+                networks:
+                  - mynet
+            volumes:
+              mysql_data:
+            networks:
+              mynet:
+                driver: bridge
+            COMPOSEOF
 
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/fruit-app:latest
