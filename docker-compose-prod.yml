@@ -28,6 +28,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: jpa
+      MYSQL_USER: ${MYSQL_USER}        # ← 추가
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # ← 추가
+      MYSQL_ROOT_HOST: '%'              # ← 추가 (모든 호스트 허용)
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
