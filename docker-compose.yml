@@ -10,7 +10,7 @@ services:
     environment:
 #      SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
       SPRING_JWT_SECRET: SahL5G83mGzrulJzffw-eD7RqphsXluJPBwxu0ncBFo
-      MYSQL_URL: jdbc:mysql://mysql_db:3306/jpa?serverTimezone=Asia/Seoul
+      MYSQL_URL: jdbc:mysql://mysql-db:3306/jpa?serverTimezone=Asia/Seoul
 #      MYSQL_USER: ${MYSQL_USER}
 #      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_USER: root
