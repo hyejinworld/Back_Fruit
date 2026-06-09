@@ -93,7 +93,7 @@ jobs:
               mysql_data:
             networks:
               mynet:
-                driver: bridge
+                external: true 
             COMPOSEOF
 
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
