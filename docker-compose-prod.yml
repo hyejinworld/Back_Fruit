@@ -4,6 +4,7 @@ services:
   springboot-app:
     image: ${DOCKER_USERNAME}/fruit-app:latest
     container_name: fruit_app
+    restart: on-failure  # ← 이것만 추가
     ports:
       - "9000:9000"
     environment:
