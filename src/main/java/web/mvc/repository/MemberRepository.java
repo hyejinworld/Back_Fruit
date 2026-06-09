@@ -1,0 +1,19 @@
+package web.mvc.repository;
+
+import web.mvc.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+
+
+public interface MemberRepository extends JpaRepository<Member, Long>{
+   @Query("select m from Member m where m.id=?1")
+   Member duplicateCheck(String id);
+
+   Boolean existsById(String id);
+
+   //username을 받아 DB 테이블에서 회원을 조회하는 메소드 작성
+   Member findById(String id);
+
+
+}
