@@ -1,4 +1,4 @@
-name: CI/CD Pipeline  # GitHub Actions 워크플로우의 이름
+name: BackFruit Pipeline  # GitHub Actions 워크플로우의 이름
 
 on:
   push:
@@ -33,10 +33,10 @@ jobs:
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
       - name: Docker 이미지 빌드
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/jwt-app:latest .  # 애플리케이션을 도커 이미지로 빌드
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/fruit-app:latest .  # 애플리케이션을 도커 이미지로 빌드
 
       - name: Docker 이미지 푸시
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/jwt-app:latest  # 빌드한 이미지를 Docker Hub에 업로드
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/fruit-app:latest  # 빌드한 이미지를 Docker Hub에 업로드
 
       # .env 파일을 Actions 내에서 동적으로 생성
       - name: .env 파일 생성
@@ -63,6 +63,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
             cd ~/cicd-docker
             docker pull ${{ secrets.DOCKER_USERNAME }}/fruit-app:latest
             docker compose -f docker-compose-prod.yml down
