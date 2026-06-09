@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  springboot-app:
+    image: ${DOCKER_USERNAME}/fruit-app:latest
+    container_name: fruit_app
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
+      MYSQL_URL: jdbc:mysql://mysql_db:3306/jpa?serverTimezone=Asia/Seoul
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    external: true  # 기존 mynet 사용

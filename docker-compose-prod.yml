@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  springboot-app:
+    image: ${DOCKER_USERNAME}/fruit-app:latest
+    container_name: fruit_app
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
+      MYSQL_URL: jdbc:mysql://mysql-db:3306/jpa?serverTimezone=Asia/Seoul
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - mysql-db
+    networks:
+      - mynet
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: fruit_mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: jpa
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynet
+
+volumes:
+  mysql_data:
+
+networks:
+  mynet:
+    driver: bridge

@@ -51,6 +51,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("SecurityFilterChain filterChain(HttpSecurity http) call.....");
+
+        http.cors((cors) -> cors.configurationSource(request -> {
+            var config = new org.springframework.web.cors.CorsConfiguration();
+            config.setAllowedOrigins(List.of("http://localhost:5173"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            config.setAllowedHeaders(List.of("*"));
+            config.setExposedHeaders(List.of("Authorization"));
+            config.setAllowCredentials(true);
+            return config;
+        }));
+
+        http.csrf((auth) -> auth.disable());
+        http.formLogin((auth) -> auth.disable());
+        http.httpBasic((auth) -> auth.disable());
+
+    //////////////////////
+    /*public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.info("SecurityFilterChain filterChain(HttpSecurity http) call.....");
        /////////////////////////////////
         //프론트연결
         http.cors((cors) -> cors.configurationSource(request -> {
@@ -71,29 +89,57 @@ public class SecurityConfig {
        // http.formLogin(Customizer.withDefaults());
         //http basic 인증 방식 disable
         http.httpBasic((auth) -> auth.disable());
-
+*/
         //경로별 인가 작업
-        http.authorizeHttpRequests((auth) -> auth .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ← 추가
-        .requestMatchers("/index", "/members", "/members/**", "/login").permitAll()
-        // [1] GET 요청: 누구나 접근 가능
-        .requestMatchers(HttpMethod.GET, "/boards").permitAll()
-        .requestMatchers(HttpMethod.GET, "/boards/**").permitAll()
+//        http.authorizeHttpRequests((auth) -> auth .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ← 추가
+//        .requestMatchers("/index", "/members", "/members/**", "/login").permitAll()
+//        // [1] GET 요청: 누구나 접근 가능
+//        .requestMatchers(HttpMethod.GET, "/boards").permitAll()
+//        .requestMatchers(HttpMethod.GET, "/boards/**").permitAll()
+//
+//                //swagger추가
+//                        .requestMatchers(
+//                        "/v3/api-docs/**",
+//                        "/swagger-ui/**",
+//                        "/swagger-ui.html").permitAll()
+//
+//        // [2] POST 요청: 인증 필요
+//        .requestMatchers(HttpMethod.POST, "/boards").authenticated()
+//        // [3] PUT 요청: 인증 필요
+//        .requestMatchers(HttpMethod.PUT, "/boards").authenticated()
+//        // [4] DELETE 요청: 인증 필요
+//        .requestMatchers(HttpMethod.DELETE, "/boards").authenticated()
 
-        // [2] POST 요청: 인증 필요
-        .requestMatchers(HttpMethod.POST, "/boards").authenticated()
-        // [3] PUT 요청: 인증 필요
-        .requestMatchers(HttpMethod.PUT, "/boards").authenticated()
-        // [4] DELETE 요청: 인증 필요
-        .requestMatchers(HttpMethod.DELETE, "/boards").authenticated()
+                http.authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/index",
+                                "/members",
+                                "/members/**",
+                                "/login",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/boards", "/boards/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/boards").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/boards/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/boards/**").authenticated()
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .anyRequest().authenticated());
 
         /*https://docs.spring.io/spring-security/site/docs/5.5.6/api/org/springframework/security/config/annotation/web/configurers/AuthorizeHttpRequestsConfigurer.AuthorizedUrl.html#hasAnyRole(java.lang.String...)
         * 사용자가 적어도 하나 이상 가져야 하는 역할(예: ADMIN, USER 등). 각 역할은 ROLE_로 시작하면 안 됩니다. 이미 자동으로 ROLE_이 붙기 때문입니
         * */
 
-                        .requestMatchers(HttpMethod.PUT, "/boards/**").authenticated()  // /** 추가
-                        .requestMatchers(HttpMethod.DELETE, "/boards/**").authenticated() // /** 추가
-        .requestMatchers("/admin").hasRole("ADMIN") // 자동으로 ROLE_ 붙는다.
-        .anyRequest().authenticated());
+//                        .requestMatchers(HttpMethod.PUT, "/boards/**").authenticated()  // /** 추가
+//                        .requestMatchers(HttpMethod.DELETE, "/boards/**").authenticated() // /** 추가
+//        .requestMatchers("/admin").hasRole("ADMIN") // 자동으로 ROLE_ 붙는다.
+//        .anyRequest().authenticated());
 
 
         // LoginFilter 등록 위에 이 줄 추가
