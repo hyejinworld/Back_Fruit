@@ -26,6 +26,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: jpa
+      command: --innodb-buffer-pool-size=128M  #용량늘리기
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
