@@ -9,12 +9,9 @@ services:
       - "9000:9000"
     environment:
       SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
-#      SPRING_JWT_SECRET: SahL5G83mGzrulJzffw-eD7RqphsXluJPBwxu0ncBFo
       MYSQL_URL: jdbc:mysql://mysql-db:3306/jpa?serverTimezone=Asia/Seoul
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#      MYSQL_USER: root
-#      MYSQL_PASSWORD: 1234
       JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
       SPRING_PROFILES_ACTIVE: prod
     networks:

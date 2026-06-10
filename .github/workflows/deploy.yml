@@ -46,15 +46,6 @@ jobs:
           script: |
             mkdir -p ~/cicd-docker
             cd ~/cicd-docker
-
-            cat > .env << 'EOF'
-            SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
-            MYSQL_URL=jdbc:mysql://mysql-db:3306/jpa?serverTimezone=Asia/Seoul
-            MYSQL_USER=${{ secrets.MYSQL_USER }}
-            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            EOF
-            
             cat > docker-compose-prod.yml << 'COMPOSEOF'
             services:
               springboot-app:
