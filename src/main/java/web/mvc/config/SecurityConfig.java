@@ -54,7 +54,8 @@ public class SecurityConfig {
 
         http.cors((cors) -> cors.configurationSource(request -> {
             var config = new org.springframework.web.cors.CorsConfiguration();
-            config.setAllowedOrigins(List.of("http://localhost:5173"));
+            config.setAllowedOrigins(List.of("http://localhost:5173",
+                    "http://fruit-shop-front.s3-website.ap-northeast-2.amazonaws.com")); //s3추가
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             config.setAllowedHeaders(List.of("*"));
             config.setExposedHeaders(List.of("Authorization"));
